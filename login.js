@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const user = getCurrentUser();
   if (user) {
     if (isAdmin(user)) {
-      window.location.href = 'admin/index.html';
+      window.location.href = 'admin/admin-index.html';
     } else {
       window.location.href = 'index.html';
     }
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Login berhasil! Selamat datang, ' + (loggedUser?.name || ''));
       setTimeout(() => {
         if (isAdmin(loggedUser)) {
-          window.location.href = 'admin/index.html';
+          window.location.href = 'admin/admin-index.html';
         } else {
           window.location.href = 'index.html';
         }
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Login berhasil! Selamat datang, ' + (loggedUser?.name || ''));
       setTimeout(() => {
         if (isAdmin(loggedUser)) {
-          window.location.href = 'admin/index.html';
+          window.location.href = 'admin/admin-index.html';
         } else {
           window.location.href = 'index.html';
         }

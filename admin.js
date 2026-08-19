@@ -12,10 +12,10 @@ function requireAdmin() {
 }
 
 function initAdminSidebar() {
-  const path = window.location.pathname.split('/').pop() || 'index.html';
+  const path = window.location.pathname.split('/').pop() || 'admin-index.html';
   document.querySelectorAll('.admin-nav a').forEach(a => {
     const href = a.getAttribute('href');
-    if (href === path || (path === '' && href === 'index.html')) {
+    if (href === path || (path === '' && href === 'admin-index.html')) {
       a.classList.add('active');
     }
   });
