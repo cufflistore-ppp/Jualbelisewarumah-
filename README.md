@@ -72,6 +72,7 @@ JualBeliSewaRumah/
 │   ├── admin-produk.html
 │   └── admin-paket.html
 ├── css/
+│   └── style.css
 ├── js/
 └── assets/
 ```
