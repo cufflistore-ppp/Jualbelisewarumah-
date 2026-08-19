@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Paket - Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+  <button class="admin-menu-toggle" id="admin-menu-toggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <i class="fas fa-house-chimney"></i>
+      <span>Admin Panel</span>
+    </div>
+    <ul class="admin-nav">
+      <li><a href="admin-index.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="admin-pengguna.html"><i class="fas fa-users"></i> Pengguna</a></li>
+      <li><a href="admin-produk.html"><i class="fas fa-home"></i> Produk</a></li>
+      <li><a href="admin-paket.html" class="active"><i class="fas fa-box"></i> Kelola Paket</a></li>
+      <li><a href="../index.html"><i class="fas fa-globe"></i> Ke Website</a></li>
+      <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Kelola Paket</h1>
+    </div>
+
+    <div class="alert alert-info" style="background:rgba(34,211,238,0.1);color:#22d3ee;border-color:rgba(34,211,238,0.3);">
+      <i class="fas fa-info-circle"></i>
+      <div>
+        Setelah pengguna membayar paket (transfer bank / e-wallet), cari akun pengguna di halaman 
+        <a href="admin-pengguna.html" style="color:#22d3ee;text-decoration:underline;">Pengguna</a> 
+        lalu berikan akses paket secara manual.
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:24px;">
+      <div class="stat-card" style="border:1px solid #334155;">
+        <h3 style="color:white;margin-bottom:12px;"><i class="fas fa-home" style="color:#3b82f6;"></i> Paket 1 Produk</h3>
+        <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:8px;">Harga: <strong style="color:white;">Rp99.000</strong></p>
+        <ul style="color:#cbd5e1;font-size:0.85rem;padding-left:18px;line-height:1.8;">
+          <li>Max 1 produk</li>
+          <li>Min 5 foto</li>
+          <li>Status jual / kontrak</li>
+          <li>Alamat + WhatsApp</li>
+        </ul>
+      </div>
+      <div class="stat-card" style="border:1px solid #334155;">
+        <h3 style="color:white;margin-bottom:12px;"><i class="fas fa-building" style="color:#a78bfa;"></i> Paket 3 Produk</h3>
+        <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:8px;">Harga: <strong style="color:white;">Rp249.000</strong></p>
+        <ul style="color:#cbd5e1;font-size:0.85rem;padding-left:18px;line-height:1.8;">
+          <li>Max 3 produk</li>
+          <li>Min 5 foto + video</li>
+          <li>Status jual / kontrak</li>
+          <li>Alamat lengkap + WhatsApp</li>
+          <li>Spesifikasi lengkap</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="color:white;margin:32px 0 16px;font-size:1.2rem;">Pengguna dengan Paket Aktif</h2>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Pengguna</th>
+            <th>Paket</th>
+            <th>Slot Digunakan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="package-users"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Reuse package modal -->
+  <div class="modal-overlay" id="package-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Atur Paket</h3>
+        <button class="modal-close" onclick="closePackageModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:12px;">Pengguna: <strong id="modal-user-name"></strong></p>
+        <div class="form-group">
+          <label>Pilih Paket</label>
+          <select id="modal-package" class="form-control">
+            <option value="">Tanpa Paket</option>
+            <option value="1">Paket 1 Produk</option>
+            <option value="3">Paket 3 Produk</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="admin-btn admin-btn-outline" onclick="closePackageModal()">Batal</button>
+        <button class="admin-btn admin-btn-primary" onclick="savePackage()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      requireAdmin();
+      initAdminSidebar();
+
+      const allUsers = await getUsersFromFirebase();
+      const users = allUsers.filter(u => u.package === '1' || u.package === '3');
+      const tbody = document.getElementById('package-users');
+      if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#94a3b8;">Belum ada pengguna berlangganan</td></tr>';
+      } else {
+        tbody.innerHTML = users.map(u => {
+          const count = countUserProducts(u.id);
+          return `
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <img src="${u.avatar || ''}" class="user-avatar" onerror="this.src='https://ui-avatars.com/api/?name=U&size=36'">
+                  <div>
+                    <div style="font-weight:600;color:white;">${u.name || '-'}</div>
+                    <div style="font-size:0.8rem;color:#94a3b8;">${u.email || '-'}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="admin-badge ${u.package === '1' ? 'paket1' : 'paket3'}">${getPackageLabel(u.package)}</span></td>
+              <td>${count}/${u.maxProducts || 0}</td>
+              <td>
+                <button class="admin-btn admin-btn-primary" onclick="openPackageModal('${u.id}')">
+                  <i class="fas fa-edit"></i> Ubah
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    });
+  </script>
+</body>
+</html>
