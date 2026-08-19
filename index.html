@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - JualBeliSewaRumah</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+  <button class="admin-menu-toggle" id="admin-menu-toggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <i class="fas fa-house-chimney"></i>
+      <span>Admin Panel</span>
+    </div>
+    <ul class="admin-nav">
+      <li><a href="index.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="pengguna.html"><i class="fas fa-users"></i> Pengguna</a></li>
+      <li><a href="produk.html"><i class="fas fa-home"></i> Produk</a></li>
+      <li><a href="paket.html"><i class="fas fa-box"></i> Kelola Paket</a></li>
+      <li><a href="../index.html"><i class="fas fa-globe"></i> Ke Website</a></li>
+      <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Dashboard</h1>
+    </div>
+
+    <div class="admin-stats">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+        <div class="stat-label">Total Pengguna</div>
+        <div class="stat-value" id="stat-users">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon cyan"><i class="fas fa-home"></i></div>
+        <div class="stat-label">Produk Aktif</div>
+        <div class="stat-value" id="stat-products">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple"><i class="fas fa-box"></i></div>
+        <div class="stat-label">Berlangganan</div>
+        <div class="stat-value" id="stat-packages">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon pink"><i class="fas fa-tag"></i></div>
+        <div class="stat-label">Dijual</div>
+        <div class="stat-value" id="stat-dijual">0</div>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Pengguna Terbaru</th>
+            <th>Provider</th>
+            <th>Paket</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="recent-users">
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      requireAdmin();
+      initAdminSidebar();
+      loadDashboardStats();
+
+      // Recent users dari Firebase
+      const allUsers = await getUsersFromFirebase();
+      const users = allUsers.filter(u => u.package !== 'admin').slice(-5).reverse();
+      const tbody = document.getElementById('recent-users');
+      tbody.innerHTML = users.length ? users.map(u => `
+        <tr>
+          <td>
+            <div class="user-cell">
+              <img src="${u.avatar || ''}" class="user-avatar" onerror="this.src='https://ui-avatars.com/api/?name=U&size=36'">
+              <div>
+                <div style="font-weight:600;color:white;">${u.name || '-'}</div>
+                <div style="font-size:0.8rem;color:#94a3b8;">${u.email || '-'}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="admin-badge ${u.provider || 'google'}">${u.provider || '-'}</span></td>
+          <td><span class="admin-badge ${u.package === '1' ? 'paket1' : u.package === '3' ? 'paket3' : 'none'}">${getPackageLabel(u.package)}</span></td>
+          <td><span class="admin-badge ${u.active !== false ? 'active' : 'inactive'}">${u.active !== false ? 'Aktif' : 'Nonaktif'}</span></td>
+        </tr>
+      `).join('') : '<tr><td colspan="4" style="text-align:center;color:#94a3b8;">Belum ada pengguna</td></tr>';
+    });
+  </script>
+</body>
+</html>

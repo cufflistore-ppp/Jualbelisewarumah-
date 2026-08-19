@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Pengguna - Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+  <button class="admin-menu-toggle" id="admin-menu-toggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <i class="fas fa-house-chimney"></i>
+      <span>Admin Panel</span>
+    </div>
+    <ul class="admin-nav">
+      <li><a href="index.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="pengguna.html" class="active"><i class="fas fa-users"></i> Pengguna</a></li>
+      <li><a href="produk.html"><i class="fas fa-home"></i> Produk</a></li>
+      <li><a href="paket.html"><i class="fas fa-box"></i> Kelola Paket</a></li>
+      <li><a href="../index.html"><i class="fas fa-globe"></i> Ke Website</a></li>
+      <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Kelola Pengguna</h1>
+    </div>
+
+    <div class="admin-search">
+      <input type="text" id="search-users" placeholder="Cari nama atau email...">
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Pengguna</th>
+            <th>Login Via</th>
+            <th>Paket</th>
+            <th>Produk</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Package Modal -->
+  <div class="modal-overlay" id="package-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Atur Paket</h3>
+        <button class="modal-close" onclick="closePackageModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:12px;">Pengguna: <strong id="modal-user-name"></strong></p>
+        <div class="form-group">
+          <label>Pilih Paket</label>
+          <select id="modal-package" class="form-control">
+            <option value="">Tanpa Paket</option>
+            <option value="1">Paket 1 Produk (max 1)</option>
+            <option value="3">Paket 3 Produk (max 3)</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="admin-btn admin-btn-outline" onclick="closePackageModal()">Batal</button>
+        <button class="admin-btn admin-btn-primary" onclick="savePackage()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAdmin();
+      initAdminSidebar();
+      loadUsersTable();
+      document.getElementById('search-users').addEventListener('input', loadUsersTable);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saya - JualBeliSewaRumah</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div id="profile-content">
+    <!-- Loaded by JS -->
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <i class="fas fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="kontrakan.html" class="nav-item">
+      <i class="fas fa-building"></i>
+      <span>Kontrakan</span>
+    </a>
+    <a href="jual-rumah.html" class="nav-item">
+      <i class="fas fa-house-chimney"></i>
+      <span>Jual Rumah</span>
+    </a>
+    <a href="saya.html" class="nav-item active">
+      <i class="fas fa-user"></i>
+      <span>Saya</span>
+    </a>
+  </nav>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navigasi.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      let user = requireAuth();
+      if (!user) return;
+
+      // Refresh data paket dari Firebase (jika admin baru aktifkan)
+      user = await refreshCurrentUser() || user;
+
+      if (isAdmin(user)) {
+        window.location.href = 'admin/index.html';
+        return;
+      }
+
+      const count = countUserProducts(user.id);
+      const products = getProducts().filter(p => p.ownerId === user.id && p.active);
+      const hasPackage = user.package === '1' || user.package === '3';
+
+      let productsHtml = '';
+      if (products.length === 0) {
+        productsHtml = `
+          <div class="empty-state" style="padding:30px 10px;">
+            <i class="fas fa-home" style="font-size:2.5rem;"></i>
+            <h3>Belum Ada Rumah</h3>
+            <p>Tambahkan rumah pertama Anda.</p>
+          </div>
+        `;
+      } else {
+        productsHtml = products.map(p => `
+          <div class="user-product-card">
+            <img src="${p.photos?.[0] || ''}" alt="" onerror="this.src='https://via.placeholder.com/70'">
+            <div class="user-product-info">
+              <h4>${escapeHtml(p.title)}</h4>
+              <div class="price">${p.priceText || formatPrice(p.price)}</div>
+              <span class="status-badge status-active">${p.status}</span>
+            </div>
+            <div class="user-product-actions">
+              <button class="btn-icon btn-edit" onclick="location.href='edit-rumah.html?id=${p.id}'" title="Edit">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="btn-icon btn-delete" onclick="deleteMyProduct('${p.id}')" title="Hapus">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('profile-content').innerHTML = `
+        <div class="profile-header">
+          <img src="${user.avatar}" alt="Avatar" class="profile-avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&size=128'">
+          <div class="profile-name">${escapeHtml(user.name)}</div>
+          <div class="profile-email">
+            <i class="fab fa-${user.provider === 'google' ? 'google' : 'facebook-f'}"></i>
+            ${escapeHtml(user.email)}
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="package-info">
+            <div>
+              <div style="font-size:0.8rem;color:var(--gray);">Status Paket</div>
+              <span class="package-badge">${getPackageLabel(user.package)}</span>
+            </div>
+            <div class="slot-info">
+              Produk: <strong>${count}/${user.maxProducts}</strong><br>
+              Sisa Slot: <strong>${Math.max(0, user.maxProducts - count)}</strong>
+            </div>
+          </div>
+
+          ${!hasPackage ? `
+            <div class="alert alert-warning">
+              <i class="fas fa-info-circle"></i>
+              <div>
+                Anda belum memiliki paket. Beli paket agar dapat menambahkan rumah.
+                <br><a href="paket.html" style="color:var(--primary);font-weight:600;">Lihat Paket →</a>
+              </div>
+            </div>
+          ` : `
+            ${count < user.maxProducts ? `
+              <a href="tambah-rumah.html" class="btn btn-primary btn-block mb-2">
+                <i class="fas fa-plus"></i> Tambah Rumah
+              </a>
+            ` : `
+              <div class="alert alert-info mb-2">
+                <i class="fas fa-box"></i>
+                <div>Slot produk sudah penuh (${count}/${user.maxProducts}).</div>
+              </div>
+            `}
+            <a href="paket.html" class="btn btn-secondary btn-block mb-2" style="font-size:0.85rem;">
+              <i class="fas fa-box-open"></i> Kelola Paket
+            </a>
+          `}
+
+          <h3 style="font-size:1rem;margin:16px 0 12px;font-weight:700;">
+            <i class="fas fa-list" style="color:var(--primary);"></i> Rumah Saya
+          </h3>
+          ${productsHtml}
+
+          <button class="btn btn-danger btn-block mt-3" onclick="logout()" style="margin-top:24px;">
+            <i class="fas fa-sign-out-alt"></i> Keluar
+          </button>
+        </div>
+      `;
+    });
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const d = document.createElement('div');
+      d.textContent = text;
+      return d.innerHTML;
+    }
+
+    function deleteMyProduct(id) {
+      if (!confirm('Yakin ingin menghapus rumah ini?')) return;
+      const products = getProducts();
+      const idx = products.findIndex(p => p.id === id);
+      if (idx !== -1) {
+        products[idx].active = false;
+        saveProducts(products);
+        showToast('Rumah berhasil dihapus');
+        setTimeout(() => location.reload(), 800);
+      }
+    }
+  </script>
+</body>
+</html>

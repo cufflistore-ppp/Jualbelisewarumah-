@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Rumah - JualBeliSewaRumah</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <header class="header">
+    <button class="back-btn" onclick="location.href='saya.html'">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <div class="logo">
+      <i class="fas fa-pen"></i>
+      <span>Edit Rumah</span>
+    </div>
+    <div style="width:40px;"></div>
+  </header>
+
+  <div class="page-container" style="padding:16px;">
+    <form id="form-edit">
+      <div class="form-group">
+        <label>Foto Rumah <span class="required">*</span> (min. 5)</label>
+        <div class="photo-upload-area" id="photo-upload-area">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Klik untuk menambah foto</p>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
+        <div class="photo-preview-grid" id="photo-preview-grid"></div>
+        <div class="photo-count" id="photo-count">0 foto</div>
+      </div>
+
+      <div class="form-group hidden" id="video-group">
+        <label>Video Rumah</label>
+        <input type="file" id="video-input" accept="video/*" class="form-control">
+        <div id="video-preview" class="mt-1"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Nama / Judul Rumah <span class="required">*</span></label>
+        <input type="text" id="title" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+        <label>Status <span class="required">*</span></label>
+        <select id="status" class="form-control" required>
+          <option value="DIJUAL">DIJUAL</option>
+          <option value="DIKONTRAKKAN">DIKONTRAKKAN</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Harga (Rp) <span class="required">*</span></label>
+        <input type="number" id="price" class="form-control" required min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Alamat Lengkap <span class="required">*</span></label>
+        <textarea id="address" class="form-control" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Lokasi Singkat</label>
+        <input type="text" id="locationShort" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Deskripsi</label>
+        <textarea id="description" class="form-control"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Kamar Tidur</label>
+          <input type="number" id="bedrooms" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Kamar Mandi</label>
+          <input type="number" id="bathrooms" class="form-control" min="0">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Luas Tanah (m²)</label>
+          <input type="number" id="landArea" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Luas Bangunan (m²)</label>
+          <input type="number" id="buildingArea" class="form-control" min="0">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Fasilitas</label>
+        <input type="text" id="facilities" class="form-control" placeholder="Pisahkan dengan koma">
+      </div>
+
+      <div class="form-group">
+        <label>Nomor WhatsApp <span class="required">*</span></label>
+        <input type="tel" id="whatsapp" class="form-control" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        <i class="fas fa-save"></i> Simpan Perubahan
+      </button>
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/edit-rumah.js"></script>
+</body>
+</html>
