@@ -57,7 +57,7 @@ Akses: login sebagai Admin → otomatis masuk `admin/`
 
 ```
 JualBeliSewaRumah/
-├── index.html
+├── admin-index.html
 ├── kontrakan.html
 ├── jual-rumah.html
 ├── detail.html
@@ -67,10 +67,10 @@ JualBeliSewaRumah/
 ├── edit-rumah.html
 ├── paket.html
 ├── admin/
-│   ├── index.html
-│   ├── pengguna.html
-│   ├── produk.html
-│   └── paket.html
+│   ├── admin-index.html
+│   ├── admin-pengguna.html
+│   ├── admin-produk.html
+│   └── admin-paket.html
 ├── css/
 ├── js/
 └── assets/

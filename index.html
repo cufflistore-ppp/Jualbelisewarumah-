@@ -3,108 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - JualBeliSewaRumah</title>
+  <title>Beranda - JualBeliSewaRumah</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
-<body class="admin-body">
-  <button class="admin-menu-toggle" id="admin-menu-toggle">
-    <i class="fas fa-bars"></i>
-  </button>
-
-  <aside class="admin-sidebar">
-    <div class="admin-logo">
+<body>
+  <header class="header">
+    <div class="logo">
       <i class="fas fa-house-chimney"></i>
-      <span>Admin Panel</span>
+      <span>JualBeliSewaRumah</span>
     </div>
-    <ul class="admin-nav">
-      <li><a href="index.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-      <li><a href="pengguna.html"><i class="fas fa-users"></i> Pengguna</a></li>
-      <li><a href="produk.html"><i class="fas fa-home"></i> Produk</a></li>
-      <li><a href="paket.html"><i class="fas fa-box"></i> Kelola Paket</a></li>
-      <li><a href="../index.html"><i class="fas fa-globe"></i> Ke Website</a></li>
-      <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
-    </ul>
-  </aside>
+    <div class="header-actions">
+      <a href="login.html" id="login-link" class="btn btn-primary" style="padding:8px 16px;font-size:0.85rem;">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </a>
+    </div>
+  </header>
 
-  <main class="admin-main">
-    <div class="admin-header">
-      <h1>Dashboard</h1>
+  <div class="page-container">
+    <div class="banner">
+      <h1>Temukan Rumah Impianmu</h1>
+      <p>Jual, beli, dan sewa rumah dengan mudah & aman</p>
     </div>
 
-    <div class="admin-stats">
-      <div class="stat-card">
-        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
-        <div class="stat-label">Total Pengguna</div>
-        <div class="stat-value" id="stat-users">0</div>
+    <div class="search-section">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-input" placeholder="Cari nama rumah atau lokasi...">
       </div>
-      <div class="stat-card">
-        <div class="stat-icon cyan"><i class="fas fa-home"></i></div>
-        <div class="stat-label">Produk Aktif</div>
-        <div class="stat-value" id="stat-products">0</div>
+
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-status="">
+          <i class="fas fa-th-large"></i> Semua
+        </button>
+        <button class="filter-btn" data-status="DIJUAL">
+          <i class="fas fa-tag"></i> Dijual
+        </button>
+        <button class="filter-btn" data-status="DIKONTRAKKAN">
+          <i class="fas fa-key"></i> Dikontrakkan
+        </button>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon purple"><i class="fas fa-box"></i></div>
-        <div class="stat-label">Berlangganan</div>
-        <div class="stat-value" id="stat-packages">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon pink"><i class="fas fa-tag"></i></div>
-        <div class="stat-label">Dijual</div>
-        <div class="stat-value" id="stat-dijual">0</div>
+
+      <div class="filter-row">
+        <select class="filter-select" id="location-filter">
+          <option value="">Semua Lokasi</option>
+        </select>
       </div>
     </div>
 
-    <div class="admin-table-wrap">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Pengguna Terbaru</th>
-            <th>Provider</th>
-            <th>Paket</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="recent-users">
-        </tbody>
-      </table>
-    </div>
-  </main>
+    <h2 class="section-title">
+      <i class="fas fa-home"></i> Rumah Tersedia
+    </h2>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="../js/firebase-config.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/admin.js"></script>
+    <div class="product-grid" id="product-grid">
+      <!-- Products loaded by JS -->
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <i class="fas fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="kontrakan.html" class="nav-item">
+      <i class="fas fa-building"></i>
+      <span>Kontrakan</span>
+    </a>
+    <a href="jual-rumah.html" class="nav-item">
+      <i class="fas fa-house-chimney"></i>
+      <span>Jual Rumah</span>
+    </a>
+    <a href="saya.html" class="nav-item">
+      <i class="fas fa-user"></i>
+      <span>Saya</span>
+    </a>
+  </nav>
+
+  <script src="js/auth.js"></script>
+  <script src="js/produk.js"></script>
+  <script src="js/navigasi.js"></script>
+  <script src="js/script.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      requireAdmin();
-      initAdminSidebar();
-      loadDashboardStats();
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getCurrentUser();
+      const loginLink = document.getElementById('login-link');
+      if (user) {
+        loginLink.innerHTML = `<i class="fas fa-user"></i> ${user.name.split(' ')[0]}`;
+        loginLink.href = 'saya.html';
+      }
 
-      // Recent users dari Firebase
-      const allUsers = await getUsersFromFirebase();
-      const users = allUsers.filter(u => u.package !== 'admin').slice(-5).reverse();
-      const tbody = document.getElementById('recent-users');
-      tbody.innerHTML = users.length ? users.map(u => `
-        <tr>
-          <td>
-            <div class="user-cell">
-              <img src="${u.avatar || ''}" class="user-avatar" onerror="this.src='https://ui-avatars.com/api/?name=U&size=36'">
-              <div>
-                <div style="font-weight:600;color:white;">${u.name || '-'}</div>
-                <div style="font-size:0.8rem;color:#94a3b8;">${u.email || '-'}</div>
-              </div>
-            </div>
-          </td>
-          <td><span class="admin-badge ${u.provider || 'google'}">${u.provider || '-'}</span></td>
-          <td><span class="admin-badge ${u.package === '1' ? 'paket1' : u.package === '3' ? 'paket3' : 'none'}">${getPackageLabel(u.package)}</span></td>
-          <td><span class="admin-badge ${u.active !== false ? 'active' : 'inactive'}">${u.active !== false ? 'Aktif' : 'Nonaktif'}</span></td>
-        </tr>
-      `).join('') : '<tr><td colspan="4" style="text-align:center;color:#94a3b8;">Belum ada pengguna</td></tr>';
+      populateLocationFilter('location-filter');
+      loadProducts();
+
+      // Search
+      let searchTimeout;
+      document.getElementById('search-input').addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(loadProducts, 300);
+      });
+
+      // Filter tabs
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          loadProducts();
+        });
+      });
+
+      document.getElementById('location-filter').addEventListener('change', loadProducts);
     });
+
+    function loadProducts() {
+      const search = document.getElementById('search-input').value;
+      const status = document.querySelector('.filter-btn.active')?.dataset.status || '';
+      const location = document.getElementById('location-filter').value;
+
+      const products = filterProducts({ search, status, location });
+      renderProductGrid(products, 'product-grid');
+    }
   </script>
 </body>
 </html>
